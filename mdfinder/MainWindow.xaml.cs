@@ -20,9 +20,21 @@ namespace mdfinder
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Properties
+
+        public DBHelper Database { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary> Default constructor for the main window of the application. </summary>
         public MainWindow()
         {
+            this.Database = new DBHelper();
             InitializeComponent();
-        }
+        } 
+
+        #endregion
     }
 }

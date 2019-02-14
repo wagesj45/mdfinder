@@ -3,10 +3,76 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:mdfinder"
+        xmlns:mdfinder="clr-namespace:mdfinder"
+        xmlns:loc="clr-namespace:mdfinder.Localization"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="{x:Static loc:Localization.Title}" Height="450" Width="800">
+    <Window.Resources>
+        <mdfinder:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <mdfinder:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
+        <mdfinder:InverseBoolVisibilityConverter x:Key="InverseBoolVisibilityConverter" />
+    </Window.Resources>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{x:Static loc:Localization.FileMenu}">
+                <MenuItem Name="menuOpen" Header="{x:Static loc:Localization.OpenMenuItem}">
+                    <MenuItem.Icon>
+                        <ContentControl Template="{StaticResource OpenIcon}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuSave" Header="{x:Static loc:Localization.SaveMenuItem}">
+                    <MenuItem.Icon>
+                        <ContentControl Template="{StaticResource SaveIcon}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid x:Name="MainWindowGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.ColumnSpan="3" Grid.Row="0" Header="{x:Static loc:Localization.ScanLocationLabel}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ContentControl Grid.Column="0" Template="{StaticResource FolderIcon}" Width="16" Margin="0,0,4,0" />
+                    <TextBox Name="txtScanLocation" Grid.Column="1" IsReadOnly="True" />
+                    <Button Grid.Column="2" MinWidth="25" Name="btnFilePicker">...</Button>
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static loc:Localization.ActionBarLabel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="0" Name="btnProcess" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource ScanIcon}" />
+                            <Label Content="{x:Static loc:Localization.ScanLabel}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </GroupBox>
+            <DataGrid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}} }" />
+            <StatusBar Grid.Row="3" Grid.ColumnSpan="4">
+                <ProgressBar />
+            </StatusBar>
+        </Grid>
+    </DockPanel>
 </Window>
