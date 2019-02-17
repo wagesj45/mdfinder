@@ -8,37 +8,37 @@ using System.Threading.Tasks;
 namespace mdfinder
 {
     /// <summary> Scans directories, logging files and their attributes. </summary>
-    public static class Scanner
+    public class Scanner
     {
         #region Members
 
         /// <summary> Event queue for all listeners interested in FilesFound events. </summary>
-        public static event EventHandler<FilesFoundEventArgs> FilesFound;
+        public event EventHandler<FilesFoundEventArgs> FilesFound;
 
         /// <summary> Event queue for all listeners interested in DirectoryFound events. </summary>
-        public static event EventHandler<DirectoryFoundEventArgs> DirectoryFound;
+        public event EventHandler<DirectoryFoundEventArgs> DirectoryFound;
 
         /// <summary> Event queue for all listeners interested in ReportProgress events. </summary>
-        public static event EventHandler<ProgressReportEventArgs> ReportProgress;
+        public event EventHandler<ProgressReportEventArgs> ReportProgress;
 
         #endregion
 
         #region Properties
 
-        public static uint Processed { get; private set; }
+        public uint Processed { get; private set; }
 
-        public static uint Total { get; private set; }
+        public uint Total { get; private set; }
 
-        public static bool IsScanning { get; private set; }
+        public bool IsScanning { get; private set; }
 
         #endregion
 
         #region Methods
 
-        public static void Scan(string path)
+        public void Scan(string path)
         {
-            Processed = 0;
-            Total = 0;
+            this.Processed = 0;
+            this.Total = 0;
 
             var scanPath = new DirectoryInfo(path);
             if (scanPath.Exists)
@@ -47,51 +47,58 @@ namespace mdfinder
             }
         }
 
-        private static void Scan(DirectoryInfo directory)
+        private void Scan(DirectoryInfo directory)
         {
-            var files = directory.GetFiles();
-            var fileBatches = files.Bin(Properties.Settings.Default.FilesFoundAlert);
-            var subdirectories = directory.GetDirectories();
-
-            Total += (uint)files.Count();
-
-            foreach (var subdirectory in subdirectories)
+            try
             {
-                OnDirectoryFound(subdirectory);
+                var files = directory.GetFiles();
+                var fileBatches = files.Bin(Properties.Settings.Default.FilesFoundAlert);
+                var subdirectories = directory.GetDirectories();
 
-                Scan(subdirectory);
+                this.Total += (uint)files.Count();
+
+                foreach (var subdirectory in subdirectories)
+                {
+                    OnDirectoryFound(subdirectory);
+
+                    Scan(subdirectory);
+                }
+
+                foreach (var batch in fileBatches)
+                {
+                    OnFilesFound(batch);
+
+                    this.Processed += (uint)batch.Count();
+
+                    OnReportProgress(this.Processed, this.Total);
+                }
             }
-
-            foreach (var batch in fileBatches)
+            catch(UnauthorizedAccessException unauthorizedAccessException)
             {
-                OnFilesFound(batch);
-
-                Processed += (uint)batch.Count();
-
-                OnReportProgress(Processed, Total);
+                //Ignore and just continue.
             }
         }
 
         /// <summary> Executes the files found action. </summary>
         /// <param name="files"> The files. </param>
-        private static void OnFilesFound(IEnumerable<FileInfo> files)
+        private void OnFilesFound(IEnumerable<FileInfo> files)
         {
-            FilesFound?.Invoke(null, new FilesFoundEventArgs(files));
+            this.FilesFound?.Invoke(this, new FilesFoundEventArgs(files));
         }
 
         /// <summary> Executes the directory found action. </summary>
         /// <param name="directory"> Pathname of the directory. </param>
-        private static void OnDirectoryFound(DirectoryInfo directory)
+        private void OnDirectoryFound(DirectoryInfo directory)
         {
-            DirectoryFound?.Invoke(null, new DirectoryFoundEventArgs(directory));
+            this.DirectoryFound?.Invoke(this, new DirectoryFoundEventArgs(directory));
         }
 
         /// <summary> Executes the report progress action. </summary>
         /// <param name="processed"> The processed. </param>
         /// <param name="total">     Number of. </param>
-        private static void OnReportProgress(uint processed, uint total)
+        private void OnReportProgress(uint processed, uint total)
         {
-            ReportProgress?.Invoke(null, new ProgressReportEventArgs(processed, total));
+            this.ReportProgress?.Invoke(this, new ProgressReportEventArgs(processed, total));
         }
 
         #endregion
@@ -175,7 +182,8 @@ namespace mdfinder
             /// <param name="total">     The total discovereditem count. </param>
             public ProgressReportEventArgs(uint processed, uint total)
             {
-
+                this.Processed = processed;
+                this.Total = total;
             }
 
             #endregion

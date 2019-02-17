@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms;
+using System.Threading;
 
 namespace mdfinder
 {
@@ -24,6 +26,8 @@ namespace mdfinder
 
         public DBHelper Database { get; set; }
 
+        public Scanner Scanner { get; set; }
+
         #endregion
 
         #region Constructors
@@ -32,8 +36,40 @@ namespace mdfinder
         public MainWindow()
         {
             this.Database = new DBHelper();
+            this.Scanner = new Scanner();
+
+            this.Scanner.DirectoryFound += (sender, args) => Dispatcher.Invoke(() => txtScanLocation.Text = args.Directory.Name);
+            //this.Scanner.FilesFound += (sender, args) => args.Files;
+            this.Scanner.ReportProgress += (sender, args) => Dispatcher.Invoke(() => { if (args.Processed > 0) { this.progressBar.Value = args.Percentage * 100; } });
+
             InitializeComponent();
-        } 
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void btnFilePicker_Click(object sender, RoutedEventArgs e)
+        {
+            var fbd = new FolderBrowserDialog();
+
+            if(fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtScanLocation.Text = fbd.SelectedPath;
+            }
+        }
+
+        private void btnScan_Click(object sender, RoutedEventArgs e)
+        {
+            var location = txtScanLocation.Text;
+            if (!this.Scanner.IsScanning)
+            {
+                new Thread(() =>
+                {
+                    this.Scanner.Scan(location);
+                }).Start();
+            }
+        }
 
         #endregion
     }

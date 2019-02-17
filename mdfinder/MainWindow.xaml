@@ -49,7 +49,7 @@
                     </Grid.ColumnDefinitions>
                     <ContentControl Grid.Column="0" Template="{StaticResource FolderIcon}" Width="16" Margin="0,0,4,0" />
                     <TextBox Name="txtScanLocation" Grid.Column="1" IsReadOnly="True" />
-                    <Button Grid.Column="2" MinWidth="25" Name="btnFilePicker">...</Button>
+                    <Button Grid.Column="2" MinWidth="25" Name="btnFilePicker" Click="btnFilePicker_Click">...</Button>
                 </Grid>
             </GroupBox>
             <GroupBox Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static loc:Localization.ActionBarLabel}">
@@ -61,7 +61,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Row="0" Name="btnProcess" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}">
+                    <Button Grid.Row="0" Name="btnScan" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="btnScan_Click">
                         <StackPanel Orientation="Horizontal">
                             <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource ScanIcon}" />
                             <Label Content="{x:Static loc:Localization.ScanLabel}" />
@@ -70,9 +70,7 @@
                 </Grid>
             </GroupBox>
             <DataGrid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}} }" />
-            <StatusBar Grid.Row="3" Grid.ColumnSpan="4">
-                <ProgressBar />
-            </StatusBar>
+            <ProgressBar Grid.Row="3" Grid.ColumnSpan="4" Name="progressBar" Minimum="0" Height="16"/>
         </Grid>
     </DockPanel>
 </Window>
