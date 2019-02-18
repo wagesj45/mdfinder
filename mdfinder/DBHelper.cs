@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace mdfinder
 {
     /// <summary> A database helper class. </summary>
-    public class DBHelper
+    public class DBHelper : PropertyChangedAlerter
     {
         #region Members
 
@@ -33,6 +34,15 @@ namespace mdfinder
                 return this.Database.GetCollection<FileRecord>("FileRecords");
             }
         }
+
+        public IEnumerable<FileRecord> ASDF
+        {
+            get
+            {
+                return this.FileRecords.FindAll();
+            }
+        }
+
 
         #endregion
 
@@ -63,6 +73,7 @@ namespace mdfinder
         public void InsertFileRecord(string path, long size, string hash, string hashProvider)
         {
             this.FileRecords.Insert(new FileRecord() { Path = path, Size = size, Hash = hash, HashProvider = hashProvider });
+            OnPropertyChanged("ASDF");
         }
 
         #endregion

@@ -91,6 +91,7 @@
     <Compile Include="FileRecord.cs" />
     <Compile Include="InverseBoolConverter.cs" />
     <Compile Include="InverseBoolVisibilityConverter.cs" />
+    <Compile Include="PropertyChangedAlerter.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="Localization\Localization.Designer.cs">
       <AutoGen>True</AutoGen>

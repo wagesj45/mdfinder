@@ -43,7 +43,25 @@ namespace mdfinder
             var scanPath = new DirectoryInfo(path);
             if (scanPath.Exists)
             {
+                Discover(scanPath);
                 Scan(scanPath);
+            }
+        }
+        
+        private void Discover(DirectoryInfo directory)
+        {
+            try
+            {
+                this.Total += (uint)directory.EnumerateFiles().Count();
+                foreach (var subdirectory in directory.GetDirectories())
+                {
+                    OnDirectoryFound(subdirectory);
+                    Discover(subdirectory);
+                }
+            }
+            catch (UnauthorizedAccessException unauthorizedAccessException)
+            {
+                //Ignore and just continue.
             }
         }
 
@@ -51,16 +69,11 @@ namespace mdfinder
         {
             try
             {
-                var files = directory.GetFiles();
-                var fileBatches = files.Bin(Properties.Settings.Default.FilesFoundAlert);
+                var fileBatches = directory.EnumerateFiles().Bin(Properties.Settings.Default.FilesFoundAlert);
                 var subdirectories = directory.GetDirectories();
-
-                this.Total += (uint)files.Count();
 
                 foreach (var subdirectory in subdirectories)
                 {
-                    OnDirectoryFound(subdirectory);
-
                     Scan(subdirectory);
                 }
 

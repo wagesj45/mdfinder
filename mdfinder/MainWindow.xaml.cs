@@ -39,7 +39,13 @@ namespace mdfinder
             this.Scanner = new Scanner();
 
             this.Scanner.DirectoryFound += (sender, args) => Dispatcher.Invoke(() => txtScanLocation.Text = args.Directory.Name);
-            //this.Scanner.FilesFound += (sender, args) => args.Files;
+            this.Scanner.FilesFound += (sender, args) => 
+            {
+                foreach(var file in args.Files)
+                {
+                    this.Database.InsertFileRecord(file.FullName, file.Length, Guid.NewGuid().ToString(), "test");
+                }
+            };
             this.Scanner.ReportProgress += (sender, args) => Dispatcher.Invoke(() => { if (args.Processed > 0) { this.progressBar.Value = args.Percentage * 100; } });
 
             InitializeComponent();

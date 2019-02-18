@@ -12,7 +12,7 @@ namespace mdfinder
 
         /// <summary> Gets or sets the identifier. </summary>
         /// <value> The identifier. </value>
-        public uint Id { get; set; }
+        public Int64 Id { get; set; }
 
         /// <summary> Gets or sets the full pathname of the file. </summary>
         /// <value> The full pathname of the file. </value>

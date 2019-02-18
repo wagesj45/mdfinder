@@ -69,7 +69,7 @@
                     </Button>
                 </Grid>
             </GroupBox>
-            <DataGrid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}} }" />
+            <DataGrid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{Binding Database.ASDF, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}}" />
             <ProgressBar Grid.Row="3" Grid.ColumnSpan="4" Name="progressBar" Minimum="0" Height="16"/>
         </Grid>
     </DockPanel>
