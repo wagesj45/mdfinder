@@ -5,5 +5,14 @@
     <Setting Name="FilesFoundAlert" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">25</Value>
     </Setting>
+    <Setting Name="SkipEmptyFiles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ProviderFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Language" Type="System.Globalization.CultureInfo" Scope="User">
+      <Value Profile="(Default)">en-US</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

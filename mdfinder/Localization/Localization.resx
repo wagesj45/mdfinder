@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutMenu" xml:space="preserve">
+    <value>About mdfinder...</value>
+  </data>
+  <data name="AboutWindowDescription" xml:space="preserve">
+    <value>mdfinder is a file scanning and hashing application.</value>
+  </data>
+  <data name="AboutWindowGithubLinkLabel" xml:space="preserve">
+    <value>github</value>
+  </data>
+  <data name="AboutWindowLicenseLinkLabel" xml:space="preserve">
+    <value>license</value>
+  </data>
+  <data name="AboutWindowTitle" xml:space="preserve">
+    <value>About mdfinder</value>
+  </data>
   <data name="ActionBarLabel" xml:space="preserve">
     <value>Actions</value>
   </data>
@@ -132,23 +147,89 @@
   <data name="BooleanInvalidCastExceptionFormat" xml:space="preserve">
     <value>Cannot convert type to {0} from or to a boolean.</value>
   </data>
+  <data name="ClearLabel" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ColumnHeadingHash" xml:space="preserve">
+    <value>Hash</value>
+  </data>
+  <data name="ColumnHeadingHashProvider" xml:space="preserve">
+    <value>Hash Provider</value>
+  </data>
+  <data name="ColumnHeadingPath" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="ColumnHeadingSize" xml:space="preserve">
+    <value>Size</value>
+  </data>
   <data name="CurrentVersionStatusDescription" xml:space="preserve">
     <value>The current version is up to date with the github repository.</value>
   </data>
   <data name="CustomVersionStatusDescription" xml:space="preserve">
     <value>The current version is ahead of the github repository, or is a custom version of butterflow-ui that cannot be compared to the github repository.</value>
   </data>
+  <data name="DefaultHashProviderDescription" xml:space="preserve">
+    <value>md5 hash provider. This provider creates a simple md5 hash given a file.</value>
+  </data>
+  <data name="DefaultHashProviderName" xml:space="preserve">
+    <value>Default Provider</value>
+  </data>
+  <data name="DevelopersLabel" xml:space="preserve">
+    <value>Developers and Contributors</value>
+  </data>
   <data name="EditMenu" xml:space="preserve">
     <value>Edit</value>
+  </data>
+  <data name="FileAlertThresholdLabel" xml:space="preserve">
+    <value>File Processing Threshold</value>
   </data>
   <data name="FileMenu" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="FilterBarLabel" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="FilterDuplicatesLabel" xml:space="preserve">
+    <value>Duplicates</value>
+  </data>
+  <data name="FilterShowAllLabel" xml:space="preserve">
+    <value>Show All</value>
+  </data>
   <data name="HelpMenu" xml:space="preserve">
     <value>Help</value>
   </data>
+  <data name="ItemsLabel" xml:space="preserve">
+    <value> Files</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="MD5ProviderSetPriorityException" xml:space="preserve">
+    <value>The default MD5 hash provider should not have its priorty set.</value>
+  </data>
+  <data name="OKLabel" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="OpenMenuItem" xml:space="preserve">
     <value>Open File Database...</value>
+  </data>
+  <data name="OpenSourceCreditsLabel" xml:space="preserve">
+    <value>Open Source Libraries</value>
+  </data>
+  <data name="OptionsMenu" xml:space="preserve">
+    <value>Options...</value>
+  </data>
+  <data name="OptionsWindowLanguageChangeNotice" xml:space="preserve">
+    <value>Note: Changing the user language will require a restart of the program.</value>
+  </data>
+  <data name="OptionsWindowTitle" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="ProviderFolderLabel" xml:space="preserve">
+    <value>Provider Location</value>
+  </data>
+  <data name="SaveLabel" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="SaveMenuItem" xml:space="preserve">
     <value>Save File Database...</value>
@@ -162,10 +243,16 @@
   <data name="ScanTooltip" xml:space="preserve">
     <value>Scan the selected path</value>
   </data>
+  <data name="SkipEmptyFilesLabel" xml:space="preserve">
+    <value>Skip Empty Files</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>mdfinder</value>
   </data>
   <data name="UnknownVersionStatusDescription" xml:space="preserve">
     <value>Github failed to respond with the current version. This could be because of rate limits or a network failure.</value>
+  </data>
+  <data name="VersionLabel" xml:space="preserve">
+    <value>Version</value>
   </data>
 </root>

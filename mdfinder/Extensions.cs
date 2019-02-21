@@ -27,5 +27,20 @@ namespace mdfinder
                         .GroupBy(a => a.i / binSize)
                         .Select(grp => grp.Select(a => a.x));
         }
+
+        /// <summary> An IEnumerable<T> extension method that returns the first item or a given default value if no items are in the collection. </summary>
+        /// <typeparam name="T"> Generic type parameter. </typeparam>
+        /// <param name="items">   The items to act on. </param>
+        /// <param name="default"> The default. </param>
+        /// <returns> A T. </returns>
+        public static T FirstOr<T>(this IEnumerable<T> items, T @default)
+        {
+            foreach(var t in items)
+            {
+                return t;
+            }
+
+            return @default;
+        }
     }
 }

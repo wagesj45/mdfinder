@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace mdfinder
 {
     /// <summary> Scans directories, logging files and their attributes. </summary>
-    public class Scanner
+    public class Scanner : PropertyChangedAlerter
     {
         #region Members
 
@@ -21,15 +21,54 @@ namespace mdfinder
         /// <summary> Event queue for all listeners interested in ReportProgress events. </summary>
         public event EventHandler<ProgressReportEventArgs> ReportProgress;
 
+        private uint processed;
+
+        private uint total;
+
+        private bool isScanning;
+
         #endregion
 
         #region Properties
 
-        public uint Processed { get; private set; }
+        public uint Processed
+        {
+            get
+            {
+                return this.processed;
+            }
+            private set
+            {
+                this.processed = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public uint Total { get; private set; }
+        public uint Total
+        {
+            get
+            {
+                return this.total;
+            }
+            private set
+            {
+                this.total = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public bool IsScanning { get; private set; }
+        public bool IsScanning
+        {
+            get
+            {
+                return this.isScanning;
+            }
+            private set
+            {
+                this.isScanning = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion
 
@@ -47,7 +86,7 @@ namespace mdfinder
                 Scan(scanPath);
             }
         }
-        
+
         private void Discover(DirectoryInfo directory)
         {
             try
@@ -62,6 +101,10 @@ namespace mdfinder
             catch (UnauthorizedAccessException unauthorizedAccessException)
             {
                 //Ignore and just continue.
+            }
+            catch (DirectoryNotFoundException directoryNotFoundException)
+            {
+                //Ignore and continue.
             }
         }
 
@@ -86,7 +129,7 @@ namespace mdfinder
                     OnReportProgress(this.Processed, this.Total);
                 }
             }
-            catch(UnauthorizedAccessException unauthorizedAccessException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
                 //Ignore and just continue.
             }

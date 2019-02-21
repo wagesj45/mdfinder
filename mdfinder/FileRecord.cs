@@ -16,7 +16,7 @@ namespace mdfinder
 
         /// <summary> Gets or sets the full pathname of the file. </summary>
         /// <value> The full pathname of the file. </value>
-        public string Path { get; set; }
+        public Uri Path { get; set; }
 
         /// <summary> Gets or sets the size. </summary>
         /// <value> The size. </value>

@@ -34,5 +34,41 @@ namespace mdfinder.Properties {
                 this["FilesFoundAlert"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SkipEmptyFiles {
+            get {
+                return ((bool)(this["SkipEmptyFiles"]));
+            }
+            set {
+                this["SkipEmptyFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ProviderFolder {
+            get {
+                return ((string)(this["ProviderFolder"]));
+            }
+            set {
+                this["ProviderFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("en-US")]
+        public global::System.Globalization.CultureInfo Language {
+            get {
+                return ((global::System.Globalization.CultureInfo)(this["Language"]));
+            }
+            set {
+                this["Language"] = value;
+            }
+        }
     }
 }

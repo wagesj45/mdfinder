@@ -25,24 +25,15 @@ namespace mdfinder
         /// <value> The database. </value>
         private LiteDatabase Database { get; set; }
 
-        /// <summary> Gets the file records. </summary>
-        /// <value> The file records. </value>
-        public LiteCollection<FileRecord> FileRecords
+        /// <summary> Gets a collection of file records. </summary>
+        /// <value> A collection of file records. </value>
+        private LiteCollection<FileRecord> FileRecordCollection
         {
             get
             {
                 return this.Database.GetCollection<FileRecord>("FileRecords");
             }
         }
-
-        public IEnumerable<FileRecord> ASDF
-        {
-            get
-            {
-                return this.FileRecords.FindAll();
-            }
-        }
-
 
         #endregion
 
@@ -72,8 +63,33 @@ namespace mdfinder
         /// <param name="hashProvider"> The hash provider. </param>
         public void InsertFileRecord(string path, long size, string hash, string hashProvider)
         {
-            this.FileRecords.Insert(new FileRecord() { Path = path, Size = size, Hash = hash, HashProvider = hashProvider });
-            OnPropertyChanged("ASDF");
+            var fileRecord = new FileRecord() { Path = new Uri(path), Size = size, Hash = hash, HashProvider = hashProvider };
+            this.FileRecordCollection.Insert(fileRecord);
+        }
+
+        /// <summary> Gets the file records in this collection. </summary>
+        /// <returns>
+        /// An enumerator that allows foreach to be used to process the file records in this collection.
+        /// </returns>
+        public IEnumerable<FileRecord> GetFileRecords()
+        {
+            return this.FileRecordCollection.FindAll();
+        }
+
+        /// <summary> Gets the file records in this collection. </summary>
+        /// <param name="predicate"> The predicate. </param>
+        /// <returns>
+        /// An enumerator that allows foreach to be used to process the file records in this collection.
+        /// </returns>
+        public IEnumerable<FileRecord> GetFileRecords(Func<FileRecord, bool> predicate)
+        {
+            return this.FileRecordCollection.Find(fr => predicate(fr));
+        }
+
+        /// <summary> Clears the database to its blank/initial state. </summary>
+        public void Clear()
+        {
+            this.FileRecordCollection.Delete(Query.All());
         }
 
         #endregion

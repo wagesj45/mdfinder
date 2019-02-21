@@ -61,6 +61,51 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About mdfinder....
+        /// </summary>
+        public static string AboutMenu {
+            get {
+                return ResourceManager.GetString("AboutMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to mdfinder is a file scanning and hashing application..
+        /// </summary>
+        public static string AboutWindowDescription {
+            get {
+                return ResourceManager.GetString("AboutWindowDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to github.
+        /// </summary>
+        public static string AboutWindowGithubLinkLabel {
+            get {
+                return ResourceManager.GetString("AboutWindowGithubLinkLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to license.
+        /// </summary>
+        public static string AboutWindowLicenseLinkLabel {
+            get {
+                return ResourceManager.GetString("AboutWindowLicenseLinkLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About mdfinder.
+        /// </summary>
+        public static string AboutWindowTitle {
+            get {
+                return ResourceManager.GetString("AboutWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Actions.
         /// </summary>
         public static string ActionBarLabel {
@@ -106,6 +151,51 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string ClearLabel {
+            get {
+                return ResourceManager.GetString("ClearLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hash.
+        /// </summary>
+        public static string ColumnHeadingHash {
+            get {
+                return ResourceManager.GetString("ColumnHeadingHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hash Provider.
+        /// </summary>
+        public static string ColumnHeadingHashProvider {
+            get {
+                return ResourceManager.GetString("ColumnHeadingHashProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string ColumnHeadingPath {
+            get {
+                return ResourceManager.GetString("ColumnHeadingPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        public static string ColumnHeadingSize {
+            get {
+                return ResourceManager.GetString("ColumnHeadingSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The current version is up to date with the github repository..
         /// </summary>
         public static string CurrentVersionStatusDescription {
@@ -124,11 +214,47 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to md5 hash provider. This provider creates a simple md5 hash given a file..
+        /// </summary>
+        public static string DefaultHashProviderDescription {
+            get {
+                return ResourceManager.GetString("DefaultHashProviderDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default Provider.
+        /// </summary>
+        public static string DefaultHashProviderName {
+            get {
+                return ResourceManager.GetString("DefaultHashProviderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Developers and Contributors.
+        /// </summary>
+        public static string DevelopersLabel {
+            get {
+                return ResourceManager.GetString("DevelopersLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string EditMenu {
             get {
                 return ResourceManager.GetString("EditMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Processing Threshold.
+        /// </summary>
+        public static string FileAlertThresholdLabel {
+            get {
+                return ResourceManager.GetString("FileAlertThresholdLabel", resourceCulture);
             }
         }
         
@@ -142,6 +268,33 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filters.
+        /// </summary>
+        public static string FilterBarLabel {
+            get {
+                return ResourceManager.GetString("FilterBarLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicates.
+        /// </summary>
+        public static string FilterDuplicatesLabel {
+            get {
+                return ResourceManager.GetString("FilterDuplicatesLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show All.
+        /// </summary>
+        public static string FilterShowAllLabel {
+            get {
+                return ResourceManager.GetString("FilterShowAllLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>
         public static string HelpMenu {
@@ -151,11 +304,101 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  Files.
+        /// </summary>
+        public static string ItemsLabel {
+            get {
+                return ResourceManager.GetString("ItemsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string LanguageLabel {
+            get {
+                return ResourceManager.GetString("LanguageLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The default MD5 hash provider should not have its priorty set..
+        /// </summary>
+        public static string MD5ProviderSetPriorityException {
+            get {
+                return ResourceManager.GetString("MD5ProviderSetPriorityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string OKLabel {
+            get {
+                return ResourceManager.GetString("OKLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open File Database....
         /// </summary>
         public static string OpenMenuItem {
             get {
                 return ResourceManager.GetString("OpenMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Source Libraries.
+        /// </summary>
+        public static string OpenSourceCreditsLabel {
+            get {
+                return ResourceManager.GetString("OpenSourceCreditsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options....
+        /// </summary>
+        public static string OptionsMenu {
+            get {
+                return ResourceManager.GetString("OptionsMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note: Changing the user language will require a restart of the program..
+        /// </summary>
+        public static string OptionsWindowLanguageChangeNotice {
+            get {
+                return ResourceManager.GetString("OptionsWindowLanguageChangeNotice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        public static string OptionsWindowTitle {
+            get {
+                return ResourceManager.GetString("OptionsWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider Location.
+        /// </summary>
+        public static string ProviderFolderLabel {
+            get {
+                return ResourceManager.GetString("ProviderFolderLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string SaveLabel {
+            get {
+                return ResourceManager.GetString("SaveLabel", resourceCulture);
             }
         }
         
@@ -196,6 +439,15 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skip Empty Files.
+        /// </summary>
+        public static string SkipEmptyFilesLabel {
+            get {
+                return ResourceManager.GetString("SkipEmptyFilesLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to mdfinder.
         /// </summary>
         public static string Title {
@@ -210,6 +462,15 @@ namespace mdfinder.Localization {
         public static string UnknownVersionStatusDescription {
             get {
                 return ResourceManager.GetString("UnknownVersionStatusDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string VersionLabel {
+            get {
+                return ResourceManager.GetString("VersionLabel", resourceCulture);
             }
         }
     }

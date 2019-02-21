@@ -1,0 +1,57 @@
+﻿<Window x:Class="mdfinder.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mdfinder="clr-namespace:mdfinder"
+        xmlns:loc="clr-namespace:mdfinder.Localization"
+        mc:Ignorable="d"
+        Title="AboutWindow" Height="450" Width="800">
+    <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="32">
+        <StackPanel HorizontalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="128">
+                <ContentControl VerticalAlignment="Center" Template="{StaticResource MdfinderUIIcon}" />
+                <TextBlock VerticalAlignment="Center" Text="{x:Static loc:Localization.Title}" FontSize="64" FontFamily="Segoe UI Black" />
+            </StackPanel>
+            <WrapPanel HorizontalAlignment="Center">
+                <TextBlock Text="{x:Static loc:Localization.VersionLabel}" />
+                <TextBlock Text=" - "/>
+                <TextBlock Name="txtVersion" Text="0.0.0.0" />
+            </WrapPanel>
+            <TextBlock Text="{x:Static loc:Localization.AboutWindowDescription}" TextAlignment="Center" />
+            <Separator Margin="0,15" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{x:Static loc:Localization.DevelopersLabel}" />
+                <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center">
+                            <Hyperlink NavigateUri="https://github.com/wagesj45" RequestNavigate="Hyperlink_RequestNavigate">Jordan Wages</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{x:Static loc:Localization.OpenSourceCreditsLabel}" />
+                <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center">
+                        Octokit
+                        | <Hyperlink NavigateUri="https://github.com/octokit/octokit.net" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{x:Static loc:Localization.AboutWindowGithubLinkLabel}" /></Hyperlink>
+                        | <Hyperlink NavigateUri="https://github.com/octokit/octokit.net/blob/master/LICENSE.txt" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{x:Static loc:Localization.AboutWindowLicenseLinkLabel}" /></Hyperlink>
+                    </TextBlock>
+                    <TextBlock HorizontalAlignment="Center">
+                        LiteDB
+                        | <Hyperlink NavigateUri="https://github.com/mbdavid/LiteDB" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{x:Static loc:Localization.AboutWindowGithubLinkLabel}" /></Hyperlink>
+                        | <Hyperlink NavigateUri="https://github.com/mbdavid/LiteDB/blob/master/LICENSEw" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{x:Static loc:Localization.AboutWindowLicenseLinkLabel}" /></Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+            <Separator Margin="0,10" />
+            <TextBlock Text="{x:Static mdfinder:OctokitWrapper.CurrentVersionStatusDescription}" TextAlignment="Center" Margin="0,10" />
+            <Button Name="btnOK" MaxWidth="50" Content="{x:Static loc:Localization.OKLabel}" Click="btnOK_Click"/>
+        </StackPanel>
+        </DockPanel>
+</Window>

@@ -1,0 +1,43 @@
+﻿<Window x:Class="mdfinder.OptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mdfinder="clr-namespace:mdfinder"
+        xmlns:settings="clr-namespace:mdfinder.Properties"
+        xmlns:loc="clr-namespace:mdfinder.Localization"
+        mc:Ignorable="d"
+        Title="{x:Static loc:Localization.OptionsWindowTitle}" SizeToContent="WidthAndHeight">
+    <DockPanel Margin="32">
+        <StackPanel>
+            <WrapPanel>
+                <Label Content="{x:Static loc:Localization.LanguageLabel}" />
+                <ComboBox DisplayMemberPath="DisplayName" ItemsSource="{Binding SupportedLanguages, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:OptionsWindow}}, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Source={x:Static settings:Settings.Default}, Path=Language}" />
+            </WrapPanel>
+            <TextBlock Text="{x:Static loc:Localization.OptionsWindowLanguageChangeNotice}" Foreground="Gray" />
+            <WrapPanel>
+                <Label Content="{x:Static loc:Localization.FileAlertThresholdLabel}" />
+                <TextBox VerticalAlignment="Center" Text="{Binding Source={x:Static settings:Settings.Default}, Path=FilesFoundAlert, Mode=TwoWay}" TextAlignment="Center" />
+            </WrapPanel>
+            <WrapPanel>
+                <Label Content="{x:Static loc:Localization.SkipEmptyFilesLabel}" />
+                <CheckBox VerticalAlignment="Center" IsChecked="{Binding Source={x:Static settings:Settings.Default}, Path=SkipEmptyFiles, Mode=TwoWay}" />
+            </WrapPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="77.126" />
+                    <ColumnDefinition Width="25.874"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ContentControl Grid.Column="0" Template="{StaticResource FolderIcon}" Width="16" Margin="0,0,4,0" />
+                <Label Grid.Column="1" Content="{x:Static loc:Localization.ProviderFolderLabel}" Grid.ColumnSpan="2" />
+                <TextBox x:Name="txtProviderLocation" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static settings:Settings.Default}, Path=ProviderFolder, Mode=TwoWay}" Margin="0,4"  />
+                <Button x:Name="btnProviderLocationDirectory" Grid.Column="4" MinWidth="25" Content="..." Click="BtnProviderLocationDirectory_Click" />
+            </Grid>
+            <Separator Margin="0,10" />
+            <Button Name="btnSave" MaxWidth="45" Content="{x:Static loc:Localization.SaveLabel}" Click="BtnSave_Click" />
+        </StackPanel>
+    </DockPanel>
+</Window>

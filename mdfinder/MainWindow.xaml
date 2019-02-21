@@ -11,6 +11,8 @@
         <mdfinder:InverseBoolConverter x:Key="InverseBoolConverter" />
         <mdfinder:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
         <mdfinder:InverseBoolVisibilityConverter x:Key="InverseBoolVisibilityConverter" />
+        <mdfinder:URIConverter x:Key="URIConverter" />
+        <mdfinder:SizeConverter x:Key="SizeConverter" />
     </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -24,6 +26,14 @@
                     <MenuItem.Icon>
                         <ContentControl Template="{StaticResource SaveIcon}" />
                     </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuOptions" Header="{x:Static loc:Localization.OptionsMenu}" Click="MenuOptions_Click">
+                    <MenuItem.Icon>
+                        <ContentControl Template="{StaticResource OptionsIcon}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="menuAbout" Header="{x:Static loc:Localization.AboutMenu}" Click="MenuAbout_Click">
+                    
                 </MenuItem>
             </MenuItem>
         </Menu>
@@ -52,24 +62,104 @@
                     <Button Grid.Column="2" MinWidth="25" Name="btnFilePicker" Click="btnFilePicker_Click">...</Button>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static loc:Localization.ActionBarLabel}">
+            <GroupBox Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Header="{x:Static loc:Localization.ActionBarLabel}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="48" />
+                        <RowDefinition Height="32" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Row="0" Name="btnScan" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="btnScan_Click">
+                    <Button Grid.Row="0" Grid.Column="0" Name="btnScan" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="btnScan_Click">
                         <StackPanel Orientation="Horizontal">
                             <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource ScanIcon}" />
                             <Label Content="{x:Static loc:Localization.ScanLabel}" />
                         </StackPanel>
                     </Button>
+                    <Button Grid.Row="0" Grid.Column="1" Name="btnClear" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="BtnClear_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource ClearIcon}" />
+                            <Label Content="{x:Static loc:Localization.ClearLabel}" />
+                        </StackPanel>
+                    </Button>
                 </Grid>
             </GroupBox>
-            <DataGrid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{Binding Database.ASDF, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}}" />
+            <GroupBox Grid.Column="1"  Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static loc:Localization.FilterBarLabel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="0" Grid.Column="0" Name="btnFilterShowAll" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="BtnFilterShowAll_Click" >
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource ShowAllIcon}" />
+                            <Label Content="{x:Static loc:Localization.FilterShowAllLabel}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="0" Grid.Column="1" Name="btnFilterDuplicates" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="BtnFilterDuplicates_Click" >
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource DuplicateIcon}" />
+                            <Label Content="{x:Static loc:Localization.FilterDuplicatesLabel}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </GroupBox>
+            <DataGrid x:Name="datagridFileRecords" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Initialized="DatagridFileRecords_Initialized" IsReadOnly="True" AutoGenerateColumns="False">
+                <DataGrid.Resources>
+                    <Style TargetType="Hyperlink">
+                        <EventSetter Event="Click" Handler="Hyperlink_Click"/>
+                    </Style>
+                    <Style TargetType="{x:Type DataGridCell}">
+                        <Style.Triggers>
+                            <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                <Setter Property="Background" Value="Black" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridHyperlinkColumn Header="{x:Static loc:Localization.ColumnHeadingPath}" Binding="{Binding Path}" ContentBinding="{Binding Path, Converter={StaticResource URIConverter}}" Width="Auto" IsReadOnly="True" />
+                    <DataGridTextColumn Header="{x:Static loc:Localization.ColumnHeadingSize}" Binding="{Binding Size, Converter={StaticResource SizeConverter}}" />
+                    <DataGridTextColumn Header="{x:Static loc:Localization.ColumnHeadingHash}" Binding="{Binding Hash}" />
+                    <DataGridTextColumn Header="{x:Static loc:Localization.ColumnHeadingHashProvider}" Binding="{Binding HashProvider}" />
+                </DataGrid.Columns>
+                <DataGrid.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Path=Hash}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="{x:Type GroupItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                                            <Expander IsExpanded="True">
+                                                <Expander.Header>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Path=Name}" />
+                                                        <TextBlock Text="{Binding Path=ItemCount}"/>
+                                                        <TextBlock Text="{x:Static loc:Localization.ItemsLabel}"/>
+                                                    </StackPanel>
+                                                </Expander.Header>
+                                                <ItemsPresenter />
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </DataGrid.GroupStyle>
+            </DataGrid>
+            <Label x:Name="txtProgressLabel" Grid.Row="3" Grid.ColumnSpan="4" Panel.ZIndex="1"  />
             <ProgressBar Grid.Row="3" Grid.ColumnSpan="4" Name="progressBar" Minimum="0" Height="16"/>
         </Grid>
     </DockPanel>
