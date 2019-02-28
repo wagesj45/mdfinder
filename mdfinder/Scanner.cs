@@ -76,8 +76,15 @@ namespace mdfinder
 
         public void Scan(string path)
         {
+            if(string.IsNullOrWhiteSpace(path))
+            {
+                this.IsScanning = false;
+                return;
+            }
+
             this.Processed = 0;
             this.Total = 0;
+            this.IsScanning = true;
 
             var scanPath = new DirectoryInfo(path);
             if (scanPath.Exists)
@@ -85,6 +92,8 @@ namespace mdfinder
                 Discover(scanPath);
                 Scan(scanPath);
             }
+
+            this.IsScanning = false;
         }
 
         private void Discover(DirectoryInfo directory)

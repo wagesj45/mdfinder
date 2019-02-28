@@ -70,5 +70,17 @@ namespace mdfinder.Properties {
                 this["Language"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ArchiveFolder {
+            get {
+                return ((string)(this["ArchiveFolder"]));
+            }
+            set {
+                this["ArchiveFolder"] = value;
+            }
+        }
     }
 }

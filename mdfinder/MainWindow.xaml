@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gu="https://github.com/JohanLarsson/Gu.Wpf.Media"
         xmlns:mdfinder="clr-namespace:mdfinder"
         xmlns:loc="clr-namespace:mdfinder.Localization"
         mc:Ignorable="d"
-        Title="{x:Static loc:Localization.Title}" Height="450" Width="800">
+        Title="{x:Static loc:Localization.Title}" Height="520.293" Width="814.505">
     <Window.Resources>
         <mdfinder:InverseBoolConverter x:Key="InverseBoolConverter" />
         <mdfinder:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
@@ -33,7 +34,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Name="menuAbout" Header="{x:Static loc:Localization.AboutMenu}" Click="MenuAbout_Click">
-                    
+
                 </MenuItem>
             </MenuItem>
         </Menu>
@@ -62,7 +63,7 @@
                     <Button Grid.Column="2" MinWidth="25" Name="btnFilePicker" Click="btnFilePicker_Click">...</Button>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Header="{x:Static loc:Localization.ActionBarLabel}">
+            <GroupBox Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Header="{x:Static loc:Localization.ScanningLabel}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="32" />
@@ -85,80 +86,168 @@
                     </Button>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Column="1"  Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static loc:Localization.FilterBarLabel}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="32" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Row="0" Grid.Column="0" Name="btnFilterShowAll" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="BtnFilterShowAll_Click" >
+            <GroupBox Grid.Column="1"  Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static loc:Localization.ActionBarLabel}">
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                    <Button Grid.Row="0" Grid.Column="1" Name="btnKeepLargest" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Tag="largest" Click="PerformDuplicateAction_Click">
                         <StackPanel Orientation="Horizontal">
-                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource ShowAllIcon}" />
-                            <Label Content="{x:Static loc:Localization.FilterShowAllLabel}" />
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource LargeFileIcon}" />
+                            <Label Content="{x:Static loc:Localization.ActionLargestLabel}" />
                         </StackPanel>
                     </Button>
-                    <Button Grid.Row="0" Grid.Column="1" Name="btnFilterDuplicates" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="BtnFilterDuplicates_Click" >
+                    <Button Grid.Row="0" Grid.Column="1" Name="btnKeepSmallest" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Tag="smallest" Click="PerformDuplicateAction_Click">
                         <StackPanel Orientation="Horizontal">
-                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource DuplicateIcon}" />
-                            <Label Content="{x:Static loc:Localization.FilterDuplicatesLabel}" />
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource SmallFileIcon}" />
+                            <Label Content="{x:Static loc:Localization.ActionSmallestLabel}" />
                         </StackPanel>
                     </Button>
-                </Grid>
+                    <Button Grid.Row="0" Grid.Column="1" Name="btnKeepSelected" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Tag="selected" Click="PerformDuplicateAction_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource SelectedFileIcon}" />
+                            <Label Content="{x:Static loc:Localization.ActionSelectedLabel}" />
+                        </StackPanel>
+                    </Button>
+                    <CheckBox Name="checkboxArchiveRemainingFiles" VerticalAlignment="Center" IsChecked="True" Content="{x:Static loc:Localization.ActionArchiveLabel}" />
+                </StackPanel>
             </GroupBox>
-            <DataGrid x:Name="datagridFileRecords" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Initialized="DatagridFileRecords_Initialized" IsReadOnly="True" AutoGenerateColumns="False">
-                <DataGrid.Resources>
-                    <Style TargetType="Hyperlink">
-                        <EventSetter Event="Click" Handler="Hyperlink_Click"/>
-                    </Style>
-                    <Style TargetType="{x:Type DataGridCell}">
-                        <Style.Triggers>
-                            <Trigger Property="DataGridCell.IsSelected" Value="True">
-                                <Setter Property="Background" Value="Black" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </DataGrid.Resources>
-                <DataGrid.Columns>
-                    <DataGridHyperlinkColumn Header="{x:Static loc:Localization.ColumnHeadingPath}" Binding="{Binding Path}" ContentBinding="{Binding Path, Converter={StaticResource URIConverter}}" Width="Auto" IsReadOnly="True" />
-                    <DataGridTextColumn Header="{x:Static loc:Localization.ColumnHeadingSize}" Binding="{Binding Size, Converter={StaticResource SizeConverter}}" />
-                    <DataGridTextColumn Header="{x:Static loc:Localization.ColumnHeadingHash}" Binding="{Binding Hash}" />
-                    <DataGridTextColumn Header="{x:Static loc:Localization.ColumnHeadingHashProvider}" Binding="{Binding HashProvider}" />
-                </DataGrid.Columns>
-                <DataGrid.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Path=Hash}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                        <GroupStyle.ContainerStyle>
-                            <Style TargetType="{x:Type GroupItem}">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type GroupItem}">
-                                            <Expander IsExpanded="True">
-                                                <Expander.Header>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Path=Name}" />
-                                                        <TextBlock Text="{Binding Path=ItemCount}"/>
-                                                        <TextBlock Text="{x:Static loc:Localization.ItemsLabel}"/>
-                                                    </StackPanel>
-                                                </Expander.Header>
-                                                <ItemsPresenter />
-                                            </Expander>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </GroupStyle.ContainerStyle>
-                    </GroupStyle>
-                </DataGrid.GroupStyle>
-            </DataGrid>
+            <ListBox x:Name="listBoxDupes" Grid.Row="2" Grid.Column="0" Initialized="ListBoxDupes_Initialized" ItemsSource="{Binding ScanResults.DuplicateFiles, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}}" SelectionChanged="ListBoxDupes_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding Count}" />
+                            <Label Content="{x:Static loc:Localization.FilesLabel}" />
+                            <Label Content="|" />
+                            <Label Content="{x:Static loc:Localization.SizeLabel}" />
+                            <Label Content="{Binding TotalSize, Converter={StaticResource SizeConverter}}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Grid x:Name="gridDuplicates" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" DataContext="{Binding SelectedItem, ElementName=listBoxDupe}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{x:Static loc:Localization.SizeOnDiskLabel}" />
+                        <Label Content="{Binding ScanResults.SelectedDuplicateFileGroup.TotalSize, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, Converter={StaticResource SizeConverter}}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{x:Static loc:Localization.PotentialSpaceSavingsLabel}" />
+                        <Label Content="{Binding ScanResults.SelectedDuplicateFileGroup.PotentialSizeSaving, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, Converter={StaticResource SizeConverter}}" />
+                    </StackPanel>
+                </StackPanel>
+                <DataGrid Name="datagridFileList" Grid.Row="1" Grid.Column="0" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding ScanResults.SelectedDuplicateFileGroup.FileRecords, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}}" SelectionChanged="DatagridFileList_SelectionChanged">
+                    <DataGrid.Resources>
+                        <Style TargetType="Hyperlink">
+                            <EventSetter Event="Click" Handler="Hyperlink_Click"/>
+                            <Setter Property="Foreground" Value="DarkGreen"></Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                    <Setter Property="Foreground" Value="White" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Hyperlink Click="Hyperlink_Click" NavigateUri="{Binding Path}">
+                                            <ContentControl Grid.Column="0" Template="{StaticResource OpenFileIcon}" Width="16" Margin="0,0,4,0" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn IsReadOnly="True" Header="{x:Static loc:Localization.ColumnHeadingPath}" Binding="{Binding Path, Converter={StaticResource URIConverter}}" />
+                        <DataGridTextColumn IsReadOnly="True" Header="{x:Static loc:Localization.ColumnHeadingSize}" Binding="{Binding Size, Converter={StaticResource SizeConverter}}"/>
+                        <DataGridTemplateColumn Header="{x:Static loc:Localization.ColumnHeaderKeep}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding Keep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid Name="gridPreview" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+                    <Grid Name="mediaPreviewContainer" Visibility="Hidden">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <gu:MediaElementWrapper Name="mediaPreview" Grid.Row="0" Stretch="Uniform" />
+                        <Grid Name="mediaBarPreview" Grid.Row="1" VerticalAlignment="Bottom" Background="#66666666">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Slider x:Name="ProgressSlider" Grid.Row="0" gu:Drag.PauseWhileDragging="{Binding ElementName=mediaPreview}" Maximum="{Binding ElementName=mediaPreview, Path=Length, Converter={x:Static gu:NullableTimeSpanToSecondsConverter.Default}}" Minimum="0" Style="{StaticResource {x:Static gu:Styles.ProgressSliderStyleKey}}" Value="{Binding ElementName=mediaPreview, Path=Position, Converter={x:Static gu:NullableTimeSpanToSecondsConverter.Default}}" />
+
+                            <Grid Grid.Row="1">
+                                <Grid.Resources>
+                                    <Style BasedOn="{StaticResource {x:Static gu:Styles.PlayerButtonBaseStyleKey}}" TargetType="{x:Type Button}" />
+                                </Grid.Resources>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <ToggleButton x:Name="PlayPauseButton" Grid.Column="0" IsChecked="{Binding ElementName=mediaPreview, Path=IsPlaying}" IsEnabled="{Binding ElementName=mediaPreview, Path=HasMedia}">
+                                    <ToggleButton.Style>
+                                        <Style BasedOn="{StaticResource {x:Static gu:Styles.PlayerButtonBaseStyleKey}}" TargetType="{x:Type ToggleButton}">
+                                            <Setter Property="gu:Icon.Geometry" Value="{StaticResource {x:Static gu:Geometries.PauseGeometryKey}}" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter Property="gu:Icon.Geometry" Value="{StaticResource {x:Static gu:Geometries.PlayGeometryKey}}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                </ToggleButton>
+
+                                <ToggleButton x:Name="ToggleMutedButton" Grid.Column="1" IsChecked="{Binding ElementName=mediaPreview, Path=IsMuted}" IsEnabled="{Binding ElementName=mediaPreview, Path=HasMedia}">
+                                    <ToggleButton.Style>
+                                        <Style BasedOn="{StaticResource {x:Static gu:Styles.PlayerButtonBaseStyleKey}}" TargetType="{x:Type ToggleButton}">
+                                            <Setter Property="gu:Icon.Geometry" Value="{StaticResource {x:Static gu:Geometries.UnMuteGeometryKey}}" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter Property="gu:Icon.Geometry" Value="{StaticResource {x:Static gu:Geometries.MuteGeometryKey}}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                </ToggleButton>
+
+                                <TextBlock x:Name="ProgressTextBlock" Grid.Column="2" VerticalAlignment="Center" Foreground="{Binding ElementName=ToggleMutedButton, Path=Foreground}" Opacity="{Binding ElementName=ToggleMutedButton, Path=Opacity}">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} / {1}">
+                                            <Binding Converter="{x:Static gu:TimeSpanToStringConverter.Default}" ElementName="MediaElement" Path="Position" />
+                                            <Binding Converter="{x:Static gu:TimeSpanToStringConverter.Default}" ElementName="MediaElement" Path="Length" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Image Name="imagePreview" Visibility="Hidden" />
+                    <TextBlock Name="textPreview" Visibility="Hidden" />
+                    <StackPanel Name="stackNoPreview" Orientation="Vertical" VerticalAlignment="Center">
+                        <ContentControl Grid.Column="0" Template="{StaticResource NoPreviewIcon}" Width="64" Margin="0,0,4,0" />
+                        <Label HorizontalAlignment="Center" Content="{x:Static loc:Localization.NoPreviewLabel}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
             <Label x:Name="txtProgressLabel" Grid.Row="3" Grid.ColumnSpan="4" Panel.ZIndex="1"  />
             <ProgressBar Grid.Row="3" Grid.ColumnSpan="4" Name="progressBar" Minimum="0" Height="16"/>
         </Grid>

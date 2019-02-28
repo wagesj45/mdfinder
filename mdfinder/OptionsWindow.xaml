@@ -26,15 +26,28 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="77.126" />
-                    <ColumnDefinition Width="25.874"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <ContentControl Grid.Column="0" Template="{StaticResource FolderIcon}" Width="16" Margin="0,0,4,0" />
                 <Label Grid.Column="1" Content="{x:Static loc:Localization.ProviderFolderLabel}" Grid.ColumnSpan="2" />
-                <TextBox x:Name="txtProviderLocation" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static settings:Settings.Default}, Path=ProviderFolder, Mode=TwoWay}" Margin="0,4"  />
+                <TextBox x:Name="txtProviderLocation" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static settings:Settings.Default}, Path=ProviderFolder, Mode=OneWay}" Margin="0,4"  />
                 <Button x:Name="btnProviderLocationDirectory" Grid.Column="4" MinWidth="25" Content="..." Click="BtnProviderLocationDirectory_Click" />
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ContentControl Grid.Column="0" Template="{StaticResource FolderIcon}" Width="16" Margin="0,0,4,0" />
+                <Label Grid.Column="1" Content="{x:Static loc:Localization.ArchiveFolderLabel}" Grid.ColumnSpan="2" />
+                <TextBox x:Name="txtArchiveLocation" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Source={x:Static settings:Settings.Default}, Path=ArchiveFolder, Mode=OneWay}" Margin="0,4"  />
+                <Button x:Name="btnArchiveLocationDirectory" Grid.Column="4" MinWidth="25" Content="..." Click="BtnArchiveLocationDirectory_Click" />
             </Grid>
             <Separator Margin="0,10" />
             <Button Name="btnSave" MaxWidth="45" Content="{x:Static loc:Localization.SaveLabel}" Click="BtnSave_Click" />

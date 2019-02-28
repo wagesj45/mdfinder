@@ -106,11 +106,56 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Actions.
+        ///   Looks up a localized string similar to Archive Remaining Files.
+        /// </summary>
+        public static string ActionArchiveLabel {
+            get {
+                return ResourceManager.GetString("ActionArchiveLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate Actions.
         /// </summary>
         public static string ActionBarLabel {
             get {
                 return ResourceManager.GetString("ActionBarLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep Largest.
+        /// </summary>
+        public static string ActionLargestLabel {
+            get {
+                return ResourceManager.GetString("ActionLargestLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KeepSelected.
+        /// </summary>
+        public static string ActionSelectedLabel {
+            get {
+                return ResourceManager.GetString("ActionSelectedLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep Smallest.
+        /// </summary>
+        public static string ActionSmallestLabel {
+            get {
+                return ResourceManager.GetString("ActionSmallestLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Archive Folder.
+        /// </summary>
+        public static string ArchiveFolderLabel {
+            get {
+                return ResourceManager.GetString("ArchiveFolderLabel", resourceCulture);
             }
         }
         
@@ -156,6 +201,15 @@ namespace mdfinder.Localization {
         public static string ClearLabel {
             get {
                 return ResourceManager.GetString("ClearLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep File.
+        /// </summary>
+        public static string ColumnHeaderKeep {
+            get {
+                return ResourceManager.GetString("ColumnHeaderKeep", resourceCulture);
             }
         }
         
@@ -268,29 +322,11 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filters.
+        ///   Looks up a localized string similar to Files.
         /// </summary>
-        public static string FilterBarLabel {
+        public static string FilesLabel {
             get {
-                return ResourceManager.GetString("FilterBarLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Duplicates.
-        /// </summary>
-        public static string FilterDuplicatesLabel {
-            get {
-                return ResourceManager.GetString("FilterDuplicatesLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Show All.
-        /// </summary>
-        public static string FilterShowAllLabel {
-            get {
-                return ResourceManager.GetString("FilterShowAllLabel", resourceCulture);
+                return ResourceManager.GetString("FilesLabel", resourceCulture);
             }
         }
         
@@ -327,6 +363,15 @@ namespace mdfinder.Localization {
         public static string MD5ProviderSetPriorityException {
             get {
                 return ResourceManager.GetString("MD5ProviderSetPriorityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Preview Available.
+        /// </summary>
+        public static string NoPreviewLabel {
+            get {
+                return ResourceManager.GetString("NoPreviewLabel", resourceCulture);
             }
         }
         
@@ -385,6 +430,15 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Potential Space Savings.
+        /// </summary>
+        public static string PotentialSpaceSavingsLabel {
+            get {
+                return ResourceManager.GetString("PotentialSpaceSavingsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provider Location.
         /// </summary>
         public static string ProviderFolderLabel {
@@ -430,11 +484,38 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scan Location.
+        /// </summary>
+        public static string ScanningLabel {
+            get {
+                return ResourceManager.GetString("ScanningLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scan the selected path.
         /// </summary>
         public static string ScanTooltip {
             get {
                 return ResourceManager.GetString("ScanTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size:.
+        /// </summary>
+        public static string SizeLabel {
+            get {
+                return ResourceManager.GetString("SizeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size On Disk:.
+        /// </summary>
+        public static string SizeOnDiskLabel {
+            get {
+                return ResourceManager.GetString("SizeOnDiskLabel", resourceCulture);
             }
         }
         

@@ -63,8 +63,15 @@ namespace mdfinder
         /// <param name="hashProvider"> The hash provider. </param>
         public void InsertFileRecord(string path, long size, string hash, string hashProvider)
         {
-            var fileRecord = new FileRecord() { Path = new Uri(path), Size = size, Hash = hash, HashProvider = hashProvider };
-            this.FileRecordCollection.Insert(fileRecord);
+            var fileRecord = new FileRecord(path, size, hash, hashProvider);
+            this.FileRecordCollection.Upsert(fileRecord);
+        }
+
+        /// <summary> Removes the file record described by ID. </summary>
+        /// <param name="id"> The identifier. </param>
+        public void RemoveFileRecord(string path)
+        {
+            this.FileRecordCollection.Delete(fr => fr.Id == path);
         }
 
         /// <summary> Gets the file records in this collection. </summary>

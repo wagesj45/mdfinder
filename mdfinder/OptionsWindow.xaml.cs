@@ -63,5 +63,18 @@ namespace mdfinder
                 Properties.Settings.Default.ProviderFolder = fbd.SelectedPath;
             }
         }
+
+        /// <summary> Event handler. Called by BtnArchiveLocationDirectory for click events. </summary>
+        /// <param name="sender"> Source of the event. </param>
+        /// <param name="e">      Routed event information. </param>
+        private void BtnArchiveLocationDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            var fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Properties.Settings.Default.ArchiveFolder = fbd.SelectedPath;
+            }
+        }
     }
 }

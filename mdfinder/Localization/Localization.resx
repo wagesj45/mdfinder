@@ -132,8 +132,17 @@
   <data name="AboutWindowTitle" xml:space="preserve">
     <value>About mdfinder</value>
   </data>
+  <data name="ActionArchiveLabel" xml:space="preserve">
+    <value>Archive Remaining Files</value>
+  </data>
   <data name="ActionBarLabel" xml:space="preserve">
-    <value>Actions</value>
+    <value>Duplicate Actions</value>
+  </data>
+  <data name="ActionLargestLabel" xml:space="preserve">
+    <value>Keep Largest</value>
+  </data>
+  <data name="ActionSmallestLabel" xml:space="preserve">
+    <value>Keep Smallest</value>
   </data>
   <data name="BehindVersionQuestion" xml:space="preserve">
     <value>Would you like to visit mdfinder to update to the latest version?</value>
@@ -186,14 +195,8 @@
   <data name="FileMenu" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="FilterBarLabel" xml:space="preserve">
-    <value>Filters</value>
-  </data>
-  <data name="FilterDuplicatesLabel" xml:space="preserve">
-    <value>Duplicates</value>
-  </data>
-  <data name="FilterShowAllLabel" xml:space="preserve">
-    <value>Show All</value>
+  <data name="FilesLabel" xml:space="preserve">
+    <value>Files</value>
   </data>
   <data name="HelpMenu" xml:space="preserve">
     <value>Help</value>
@@ -240,8 +243,14 @@
   <data name="ScanLocationLabel" xml:space="preserve">
     <value>Location to Scan</value>
   </data>
+  <data name="ScanningLabel" xml:space="preserve">
+    <value>Scan Location</value>
+  </data>
   <data name="ScanTooltip" xml:space="preserve">
     <value>Scan the selected path</value>
+  </data>
+  <data name="SizeLabel" xml:space="preserve">
+    <value>Size:</value>
   </data>
   <data name="SkipEmptyFilesLabel" xml:space="preserve">
     <value>Skip Empty Files</value>
@@ -254,5 +263,23 @@
   </data>
   <data name="VersionLabel" xml:space="preserve">
     <value>Version</value>
+  </data>
+  <data name="ActionSelectedLabel" xml:space="preserve">
+    <value>KeepSelected</value>
+  </data>
+  <data name="ArchiveFolderLabel" xml:space="preserve">
+    <value>Archive Folder</value>
+  </data>
+  <data name="ColumnHeaderKeep" xml:space="preserve">
+    <value>Keep File</value>
+  </data>
+  <data name="NoPreviewLabel" xml:space="preserve">
+    <value>No Preview Available</value>
+  </data>
+  <data name="PotentialSpaceSavingsLabel" xml:space="preserve">
+    <value>Potential Space Savings</value>
+  </data>
+  <data name="SizeOnDiskLabel" xml:space="preserve">
+    <value>Size On Disk:</value>
   </data>
 </root>
