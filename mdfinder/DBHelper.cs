@@ -17,7 +17,7 @@ namespace mdfinder
         /// <summary> The default database file name. </summary>
         private const string DEFAULT_DB_FILE_NAME = "mdfinder.db";
 
-        #endregion
+        #endregion Members
 
         #region Properties
 
@@ -35,7 +35,7 @@ namespace mdfinder
             }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
@@ -52,7 +52,7 @@ namespace mdfinder
             this.Database = new LiteDatabase(database);
         }
 
-        #endregion
+        #endregion Constructors
 
         #region Methods
 
@@ -67,11 +67,11 @@ namespace mdfinder
             this.FileRecordCollection.Upsert(fileRecord);
         }
 
-        /// <summary> Removes the file record described by ID. </summary>
-        /// <param name="id"> The identifier. </param>
-        public void RemoveFileRecord(string path)
+        /// <summary> Removes the file record described by its path. </summary>
+        /// <param name="id"> The <see cref="Guid"/> ID of the file. </param>
+        public void RemoveFileRecord(string id)
         {
-            this.FileRecordCollection.Delete(fr => fr.Id == path);
+            this.FileRecordCollection.Delete(fr => fr.Id == id);
         }
 
         /// <summary> Gets the file records in this collection. </summary>
@@ -99,6 +99,6 @@ namespace mdfinder
             this.FileRecordCollection.Delete(Query.All());
         }
 
-        #endregion
+        #endregion Methods
     }
 }

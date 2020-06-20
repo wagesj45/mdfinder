@@ -36,7 +36,6 @@ namespace mdfinder
         /// <summary> The text extentions. </summary>
         private static readonly string[] TEXT_EXTENTIONS = new[] { ".TXT", ".XML", ".HTM", ".HTML", ".JS", ".CSS" };
 
-
         #region Properties
 
         /// <summary> Gets or sets the database. </summary>
@@ -59,7 +58,7 @@ namespace mdfinder
         /// <value> The scan results. </value>
         public ScanResults ScanResults { get; set; }
 
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
@@ -75,9 +74,9 @@ namespace mdfinder
             this.Scanner.DirectoryFound += (sender, args) => Dispatcher.Invoke(() => txtProgressLabel.Content = args.Directory.Name);
             this.Scanner.FilesFound += (sender, args) =>
             {
-                foreach (var file in args.Files)
+                foreach(var file in args.Files)
                 {
-                    if (Properties.Settings.Default.SkipEmptyFiles && file.Length == 0)
+                    if(Properties.Settings.Default.SkipEmptyFiles && file.Length == 0)
                     {
                         break;
                     }
@@ -87,12 +86,12 @@ namespace mdfinder
                     Dispatcher.Invoke(() => txtProgressLabel.Content = file.FullName);
                 }
             };
-            this.Scanner.ReportProgress += (sender, args) => Dispatcher.Invoke(() => { if (args.Processed > 0) { this.progressBar.Value = args.Percentage * 100; } });
+            this.Scanner.ReportProgress += (sender, args) => Dispatcher.Invoke(() => { if(args.Processed > 0) { this.progressBar.Value = args.Percentage * 100; } });
 
             InitializeComponent();
         }
 
-        #endregion
+        #endregion Constructors
 
         #region Methods
 
@@ -103,13 +102,13 @@ namespace mdfinder
         /// </returns>
         private IEnumerable<IHashProvider> GetProviderPlugins()
         {
-            if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.ProviderFolder) && Directory.Exists(Properties.Settings.Default.ProviderFolder))
+            if(!string.IsNullOrWhiteSpace(Properties.Settings.Default.ProviderFolder) && Directory.Exists(Properties.Settings.Default.ProviderFolder))
             {
                 var directory = new DirectoryInfo(Properties.Settings.Default.ProviderFolder);
-                foreach (var pluginFile in directory.GetFiles("*.dll"))
+                foreach(var pluginFile in directory.GetFiles("*.dll"))
                 {
                     var assembly = Assembly.LoadFrom(pluginFile.FullName);
-                    foreach (var type in assembly.GetTypes().Where(t => t.GetInterface("IHashProvider") != null))
+                    foreach(var type in assembly.GetTypes().Where(t => t.GetInterface("IHashProvider") != null))
                     {
                         yield return Activator.CreateInstance(type) as IHashProvider;
                     }
@@ -140,11 +139,12 @@ namespace mdfinder
             this.mediaPreview.Stop();
 
             this.mediaPreview.Source = null;
-            this.imagePreview.Source = null;
+            this.imagePanel.RowDefinitions.Clear();
+            this.imagePanel.Children.Clear();
             this.textPreview.Text = string.Empty;
 
             this.mediaPreviewContainer.Visibility = Visibility.Hidden;
-            this.imagePreview.Visibility = Visibility.Hidden;
+            this.imagePanel.Visibility = Visibility.Hidden;
             this.textPreview.Visibility = Visibility.Hidden;
             this.stackNoPreview.Visibility = Visibility.Visible;
         }
@@ -156,7 +156,7 @@ namespace mdfinder
         {
             var fbd = new FolderBrowserDialog();
 
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if(fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 txtScanLocation.Text = fbd.SelectedPath;
             }
@@ -169,7 +169,7 @@ namespace mdfinder
         {
             var location = txtScanLocation.Text;
             ResetMediaPreview();
-            if (!this.Scanner.IsScanning)
+            if(!this.Scanner.IsScanning)
             {
                 new Thread(() =>
                 {
@@ -189,6 +189,20 @@ namespace mdfinder
             this.Database.Clear();
             ResetMediaPreview();
             SetDuplicateFileCollection(Enumerable.Empty<DuplicateFileGroup>());
+        }
+
+        private void BtnNotDuplicate_Click(object sender, RoutedEventArgs e)
+        {
+            if(this.ScanResults.SelectedDuplicateFileGroup != null)
+            {
+                foreach(var fileRecord in this.ScanResults.SelectedDuplicateFileGroup.FileRecords)
+                {
+                    this.Database.RemoveFileRecord(fileRecord.Id);
+                }
+                ResetMediaPreview();
+                this.ScanResults.DuplicateFiles = this.ScanResults.DuplicateFiles.Except(new[] { this.ScanResults.SelectedDuplicateFileGroup });
+                this.ScanResults.SelectedDuplicateFileGroup = null;
+            }
         }
 
         /// <summary> Event handler. Called by Hyperlink for click events. </summary>
@@ -238,9 +252,67 @@ namespace mdfinder
         /// <param name="e">      Selection changed event information. </param>
         private void ListBoxDupes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count > 0)
+            if(e.AddedItems.Count > 0)
             {
-                this.ScanResults.SelectedDuplicateFileGroup = e.AddedItems[0] as DuplicateFileGroup;
+                this.mediaPreview.Source = null;
+                this.imagePanel.Children.Clear();
+                this.imagePanel.RowDefinitions.Clear();
+                this.textPreview.Text = string.Empty;
+
+                var rowCount = 0;
+                var selectedGroup = e.AddedItems[0] as DuplicateFileGroup;
+
+                if(selectedGroup.FileRecords.All(f => IMAGE_EXTENTIONS.Contains(System.IO.Path.GetExtension(f.Path.LocalPath).ToUpper())))
+                {
+                    this.SingleFileGroupDuplicateActions.Visibility = Visibility.Hidden;
+                    this.AllFileGroupsDuplicateActions.Visibility = Visibility.Visible;
+
+                    for(int i = 0; i < selectedGroup.FileRecords.Count; i++)
+                    {
+                        var rowDefinition = new RowDefinition();
+                        rowDefinition.Height = new GridLength(1, GridUnitType.Star);
+                        this.imagePanel.RowDefinitions.Add(rowDefinition);
+                    }
+
+                    foreach(var item in selectedGroup.FileRecords)
+                    {
+                        var fileRecord = item as FileRecord;
+
+                        var extension = System.IO.Path.GetExtension(fileRecord.Path.LocalPath).ToUpper();
+                        if(IMAGE_EXTENTIONS.Contains(extension))
+                        {
+                            this.mediaPreview.Source = null;
+                            var image = new Image();
+                            image.Source = new BitmapImage(fileRecord.Path);
+                            this.imagePanel.Children.Add(image);
+                            Grid.SetRow(image, rowCount++);
+                            this.textPreview.Text = string.Empty;
+
+                            this.mediaPreviewContainer.Visibility = Visibility.Hidden;
+                            this.imagePanel.Visibility = Visibility.Visible;
+                            this.textPreview.Visibility = Visibility.Hidden;
+                            this.stackNoPreview.Visibility = Visibility.Hidden;
+                        }
+                        else if(TEXT_EXTENTIONS.Contains(extension))
+                        {
+                            this.mediaPreview.Source = null;
+                            this.imagePanel.Children.Clear();
+                            this.imagePanel.RowDefinitions.Clear();
+                            this.textPreview.Text = File.ReadAllText(fileRecord.Path.LocalPath);
+
+                            this.mediaPreviewContainer.Visibility = Visibility.Hidden;
+                            this.imagePanel.Visibility = Visibility.Hidden;
+                            this.textPreview.Visibility = Visibility.Visible;
+                            this.stackNoPreview.Visibility = Visibility.Hidden;
+                        }
+                    }
+
+                    this.ScanResults.SelectedDuplicateFileGroup = selectedGroup;
+                }
+                else
+                {
+                    this.ScanResults.SelectedDuplicateFileGroup = e.AddedItems[0] as DuplicateFileGroup;
+                }
             }
             else
             {
@@ -260,47 +332,107 @@ namespace mdfinder
 
             ResetMediaPreview();
 
-            if (duplicateFileGroup != null)
+            new Thread(() =>
             {
-                if(tag == "largest")
+                if(duplicateFileGroup != null)
                 {
-                     actionableFiles = duplicateFileGroup.FileRecords.OrderByDescending(fr => fr.Size).Skip(1);
-                }
-                else if(tag == "smallest")
-                {
-                    actionableFiles = duplicateFileGroup.FileRecords.OrderBy(fr => fr.Size).Skip(1);
-                }
-                else
-                {
-                    actionableFiles = duplicateFileGroup.FileRecords.Where(fr => !fr.Keep);
-                }
+                    if(tag == "largest")
+                    {
+                        actionableFiles = duplicateFileGroup.FileRecords.OrderByDescending(fr => fr.Size).Skip(1);
+                    }
+                    else if(tag == "smallest")
+                    {
+                        actionableFiles = duplicateFileGroup.FileRecords.OrderBy(fr => fr.Size).Skip(1);
+                    }
+                    else
+                    {
+                        actionableFiles = duplicateFileGroup.FileRecords.Where(fr => !fr.Keep);
+                    }
 
-                ZipArchive zipFile = null;
+                    ZipArchive zipFile = null;
 
-                if (archive)
-                {
-                    zipFile = ZipFile.Open(System.IO.Path.Combine(Properties.Settings.Default.ArchiveFolder, duplicateFileGroup.Hash + ".zip"), ZipArchiveMode.Update);
-                }
+                    if(archive)
+                    {
+                        zipFile = ZipFile.Open(System.IO.Path.Combine(Properties.Settings.Default.ArchiveFolder, duplicateFileGroup.Hash + ".zip"), ZipArchiveMode.Update);
+                    }
 
-                foreach (var file in actionableFiles)
-                {
                     if(archive && zipFile != null)
+                    {
+                        //Zip everything up.
+                        foreach(var file in actionableFiles)
+                        {
+                            zipFile.CreateEntryFromFile(file.Path.LocalPath, System.IO.Path.GetFileName(file.Path.LocalPath));
+                        }
+                        zipFile.Dispose();
+                    }
+
+                    foreach(var file in actionableFiles)
+                    {
+                        //Do the deletion
+                        File.Delete(file.Path.LocalPath);
+
+                        this.Database.RemoveFileRecord(file.Id);
+                    }
+
+                    SetDuplicateFileCollection(GetDuplicateFiles());
+                }
+            }).Start();
+        }
+
+        private void PerformDuplicateActionAll_Click(object sender, RoutedEventArgs e)
+        {
+            var tag = (sender as System.Windows.Controls.Button).Tag.ToString();
+            var duplicateFileGroups = new List<DuplicateFileGroup>();
+            var actionableFiles = new List<FileRecord>();
+
+            foreach(var item in this.listBoxDupes.Items)
+            {
+                duplicateFileGroups.Add(item as DuplicateFileGroup);
+            }
+
+            ResetMediaPreview();
+
+            this.IsEnabled = false;
+
+            new Thread(() =>
+            {
+                foreach(var duplicateFileGroup in duplicateFileGroups)
+                {
+                    if(tag == "largest")
+                    {
+                        actionableFiles.AddRange(duplicateFileGroup.FileRecords.Where(fr => !fr.Keep).OrderByDescending(fr => fr.Size).Skip(1));
+                    }
+                    else if(tag == "smallest")
+                    {
+                        actionableFiles.AddRange(duplicateFileGroup.FileRecords.Where(fr => !fr.Keep).OrderBy(fr => fr.Size).Skip(1));
+                    }
+                }
+
+                var zipFile = ZipFile.Open(System.IO.Path.Combine(Properties.Settings.Default.ArchiveFolder, "archive.zip"), ZipArchiveMode.Update);
+
+                //Zip all the actionable files at once.
+                if(zipFile != null)
+                {
+                    foreach(var file in actionableFiles)
                     {
                         zipFile.CreateEntryFromFile(file.Path.LocalPath, System.IO.Path.GetFileName(file.Path.LocalPath));
                     }
 
-                    File.Delete(file.Path.LocalPath);
-
-                    this.Database.RemoveFileRecord(file.Id);
-                }
-
-                if(zipFile != null)
-                {
                     zipFile.Dispose();
+
+                    foreach(var file in actionableFiles)
+                    {
+                        //Do the deletions
+                        File.Delete(file.Path.LocalPath);
+
+                        this.Database.RemoveFileRecord(file.Id);
+                    }
                 }
 
                 SetDuplicateFileCollection(GetDuplicateFiles());
-            }
+
+                Dispatcher.Invoke(() => this.IsEnabled = true);
+            }).Start();
         }
 
         /// <summary>
@@ -310,43 +442,58 @@ namespace mdfinder
         /// <param name="e">      Selection changed event information. </param>
         private void DatagridFileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 1)
+            if(e.AddedItems.Count == 1)
             {
                 var fileRecord = e.AddedItems[0] as FileRecord;
-                if (fileRecord != null)
+
+                if(fileRecord != null)
                 {
+                    this.SingleFileGroupDuplicateActions.Visibility = Visibility.Visible;
+                    this.AllFileGroupsDuplicateActions.Visibility = Visibility.Hidden;
+
                     var extension = System.IO.Path.GetExtension(fileRecord.Path.LocalPath).ToUpper();
 
-                    if (MEDIA_EXTENTIONS.Contains(extension))
+                    if(MEDIA_EXTENTIONS.Contains(extension))
                     {
                         this.mediaPreview.Source = fileRecord.Path;
-                        this.imagePreview.Source = null;
+                        this.imagePanel.Children.Clear();
+                        this.imagePanel.RowDefinitions.Clear();
                         this.textPreview.Text = string.Empty;
 
                         this.mediaPreviewContainer.Visibility = Visibility.Visible;
-                        this.imagePreview.Visibility = Visibility.Hidden;
+                        this.imagePanel.Visibility = Visibility.Hidden;
                         this.textPreview.Visibility = Visibility.Hidden;
                         this.stackNoPreview.Visibility = Visibility.Hidden;
                     }
-                    else if (IMAGE_EXTENTIONS.Contains(extension))
+                    else if(IMAGE_EXTENTIONS.Contains(extension))
                     {
+                        var rowDefinition = new RowDefinition();
+                        rowDefinition.Height = new GridLength(1, GridUnitType.Star);
+                        var image = new Image();
+                        image.Source = new BitmapImage(fileRecord.Path);
+                        Grid.SetRow(image, 0);
+
                         this.mediaPreview.Source = null;
-                        this.imagePreview.Source = new BitmapImage(fileRecord.Path);
+                        this.imagePanel.Children.Clear();
+                        this.imagePanel.RowDefinitions.Clear();
+                        this.imagePanel.RowDefinitions.Add(rowDefinition);
+                        this.imagePanel.Children.Add(image);
                         this.textPreview.Text = string.Empty;
 
                         this.mediaPreviewContainer.Visibility = Visibility.Hidden;
-                        this.imagePreview.Visibility = Visibility.Visible;
+                        this.imagePanel.Visibility = Visibility.Visible;
                         this.textPreview.Visibility = Visibility.Hidden;
                         this.stackNoPreview.Visibility = Visibility.Hidden;
                     }
-                    else if (TEXT_EXTENTIONS.Contains(extension))
+                    else if(TEXT_EXTENTIONS.Contains(extension))
                     {
                         this.mediaPreview.Source = null;
-                        this.imagePreview.Source = null;
+                        this.imagePanel.Children.Clear();
+                        this.imagePanel.RowDefinitions.Clear();
                         this.textPreview.Text = File.ReadAllText(fileRecord.Path.LocalPath);
 
                         this.mediaPreviewContainer.Visibility = Visibility.Hidden;
-                        this.imagePreview.Visibility = Visibility.Hidden;
+                        this.imagePanel.Visibility = Visibility.Hidden;
                         this.textPreview.Visibility = Visibility.Visible;
                         this.stackNoPreview.Visibility = Visibility.Hidden;
                     }
@@ -358,7 +505,6 @@ namespace mdfinder
             }
         }
     }
-    #endregion
 
-
+    #endregion Methods
 }

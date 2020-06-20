@@ -376,6 +376,15 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not A Duplicate.
+        /// </summary>
+        public static string NotDupliateLabel {
+            get {
+                return ResourceManager.GetString("NotDupliateLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string OKLabel {

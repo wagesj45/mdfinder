@@ -282,4 +282,7 @@
   <data name="SizeOnDiskLabel" xml:space="preserve">
     <value>Size On Disk:</value>
   </data>
+  <data name="NotDupliateLabel" xml:space="preserve">
+    <value>Not A Duplicate</value>
+  </data>
 </root>

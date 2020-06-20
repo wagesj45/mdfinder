@@ -7,7 +7,7 @@
         xmlns:mdfinder="clr-namespace:mdfinder"
         xmlns:loc="clr-namespace:mdfinder.Localization"
         mc:Ignorable="d"
-        Title="{x:Static loc:Localization.Title}" Height="520.293" Width="814.505">
+        Title="{x:Static loc:Localization.Title}" Height="520.293" Width="1055.509">
     <Window.Resources>
         <mdfinder:InverseBoolConverter x:Key="InverseBoolConverter" />
         <mdfinder:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
@@ -34,7 +34,6 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Name="menuAbout" Header="{x:Static loc:Localization.AboutMenu}" Click="MenuAbout_Click">
-
                 </MenuItem>
             </MenuItem>
         </Menu>
@@ -47,7 +46,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.5*" />
-                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -71,6 +70,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Button Grid.Row="0" Grid.Column="0" Name="btnScan" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="btnScan_Click">
                         <StackPanel Orientation="Horizontal">
@@ -78,7 +78,13 @@
                             <Label Content="{x:Static loc:Localization.ScanLabel}" />
                         </StackPanel>
                     </Button>
-                    <Button Grid.Row="0" Grid.Column="1" Name="btnClear" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="BtnClear_Click">
+                    <Button Grid.Row="0" Grid.Column="1" Name="btnNotDuplicate" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="BtnNotDuplicate_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource ClearIcon}" />
+                            <Label Content="{x:Static loc:Localization.NotDupliateLabel}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="0" Grid.Column="2" Name="btnClear" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Click="BtnClear_Click">
                         <StackPanel Orientation="Horizontal">
                             <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource ClearIcon}" />
                             <Label Content="{x:Static loc:Localization.ClearLabel}" />
@@ -86,7 +92,7 @@
                     </Button>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Column="1"  Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static loc:Localization.ActionBarLabel}">
+            <GroupBox Name="SingleFileGroupDuplicateActions" Grid.Column="1"  Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static loc:Localization.ActionBarLabel}">
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
                     <Button Grid.Row="0" Grid.Column="1" Name="btnKeepLargest" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Tag="largest" Click="PerformDuplicateAction_Click">
                         <StackPanel Orientation="Horizontal">
@@ -109,6 +115,22 @@
                     <CheckBox Name="checkboxArchiveRemainingFiles" VerticalAlignment="Center" IsChecked="True" Content="{x:Static loc:Localization.ActionArchiveLabel}" />
                 </StackPanel>
             </GroupBox>
+            <GroupBox Name="AllFileGroupsDuplicateActions" Grid.Column="1"  Grid.ColumnSpan="3" Grid.Row="1" Header="{x:Static loc:Localization.ActionBarLabel}" Visibility="Hidden">
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                    <Button Grid.Row="0" Grid.Column="1" Name="btnAllKeepLargest" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Tag="largest" Click="PerformDuplicateActionAll_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource LargeFileIcon}" />
+                            <Label Content="{x:Static loc:Localization.ActionLargestLabel}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="0" Grid.Column="1" Name="btnAllKeepSmallest" ToolTip="{x:Static loc:Localization.ScanTooltip}" IsEnabled="{Binding Scanner.IsScanning, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource InverseBoolConverter}}" Tag="smallest" Click="PerformDuplicateActionAll_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl MaxWidth="16" HorizontalAlignment="Center" Template="{StaticResource SmallFileIcon}" />
+                            <Label Content="{x:Static loc:Localization.ActionSmallestLabel}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </GroupBox>
             <ListBox x:Name="listBoxDupes" Grid.Row="2" Grid.Column="0" Initialized="ListBoxDupes_Initialized" ItemsSource="{Binding ScanResults.DuplicateFiles, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}}" SelectionChanged="ListBoxDupes_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -128,8 +150,8 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
@@ -144,7 +166,7 @@
                 <DataGrid Name="datagridFileList" Grid.Row="1" Grid.Column="0" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding ScanResults.SelectedDuplicateFileGroup.FileRecords, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type mdfinder:MainWindow}}}" SelectionChanged="DatagridFileList_SelectionChanged">
                     <DataGrid.Resources>
                         <Style TargetType="Hyperlink">
-                            <EventSetter Event="Click" Handler="Hyperlink_Click"/>
+                            <EventSetter Event="Click" Handler="Hyperlink_Click" />
                             <Setter Property="Foreground" Value="DarkGreen"></Setter>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
@@ -166,7 +188,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn IsReadOnly="True" Header="{x:Static loc:Localization.ColumnHeadingPath}" Binding="{Binding Path, Converter={StaticResource URIConverter}}" />
-                        <DataGridTextColumn IsReadOnly="True" Header="{x:Static loc:Localization.ColumnHeadingSize}" Binding="{Binding Size, Converter={StaticResource SizeConverter}}"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="{x:Static loc:Localization.ColumnHeadingSize}" Binding="{Binding Size, Converter={StaticResource SizeConverter}}" />
                         <DataGridTemplateColumn Header="{x:Static loc:Localization.ColumnHeaderKeep}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -240,7 +262,9 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Image Name="imagePreview" Visibility="Hidden" />
+                    <Grid Name="imagePanel" Visibility="Hidden">
+                        <!--<Image Name="imagePreview" Visibility="Visible" />-->
+                    </Grid>
                     <TextBlock Name="textPreview" Visibility="Hidden" />
                     <StackPanel Name="stackNoPreview" Orientation="Vertical" VerticalAlignment="Center">
                         <ContentControl Grid.Column="0" Template="{StaticResource NoPreviewIcon}" Width="64" Margin="0,0,4,0" />
@@ -248,8 +272,8 @@
                     </StackPanel>
                 </Grid>
             </Grid>
-            <Label x:Name="txtProgressLabel" Grid.Row="3" Grid.ColumnSpan="4" Panel.ZIndex="1"  />
-            <ProgressBar Grid.Row="3" Grid.ColumnSpan="4" Name="progressBar" Minimum="0" Height="16"/>
+            <Label x:Name="txtProgressLabel" Grid.Row="3" Grid.ColumnSpan="4" Panel.ZIndex="1" />
+            <ProgressBar Grid.Row="3" Grid.ColumnSpan="4" Name="progressBar" Minimum="0" Height="16" />
         </Grid>
     </DockPanel>
 </Window>

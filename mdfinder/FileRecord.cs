@@ -28,7 +28,7 @@ namespace mdfinder
         /// <summary> True to keep. </summary>
         private bool keep;
 
-        #endregion
+        #endregion Members
 
         #region Properties
 
@@ -122,7 +122,7 @@ namespace mdfinder
             }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
@@ -142,14 +142,13 @@ namespace mdfinder
         /// <param name="hashProvider"> The hash provider. </param>
         public FileRecord(string path, long size, string hash, string hashProvider)
         {
-            this.Id = path;
+            this.Id = Guid.NewGuid().ToString();
             this.Path = new Uri(path);
             this.Size = size;
             this.Hash = hash;
             this.HashProvider = hashProvider;
-
         }
 
-        #endregion
+        #endregion Constructors
     }
 }
