@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mdfinder
 {
@@ -13,10 +10,11 @@ namespace mdfinder
 
         /// <summary> The duplicate files. </summary>
         private IEnumerable<DuplicateFileGroup> duplicateFiles;
+
         /// <summary> The selected duplicate file group. </summary>
         private DuplicateFileGroup selectedDuplicateFileGroup;
 
-        #endregion
+        #endregion Members
 
         #region Properties
 
@@ -50,7 +48,17 @@ namespace mdfinder
             }
         }
 
-        #endregion
+        /// <summary> Gets the statistics string. </summary>
+        /// <value> The statistics string. </value>
+        public string Statistics
+        {
+            get
+            {
+                return string.Format("{0} Duplicates", this.duplicateFiles.Sum(df => df.Count - 1));
+            }
+        }
+
+        #endregion Properties
 
         #region Constructors
 
@@ -58,8 +66,10 @@ namespace mdfinder
         {
             this.duplicateFiles = Enumerable.Empty<DuplicateFileGroup>();
             this.selectedDuplicateFileGroup = new DuplicateFileGroup(Enumerable.Empty<FileRecord>());
+
+            this.AddConstantCallProperty("Statistics");
         }
 
-        #endregion
+        #endregion Constructors
     }
 }

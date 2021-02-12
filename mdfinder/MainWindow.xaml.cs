@@ -1,24 +1,17 @@
-﻿using System;
+﻿using mdfinder.hashprovider;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Forms;
-using System.Threading;
-using mdfinder.hashprovider;
 using System.Diagnostics;
-using System.Reflection;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 
 namespace mdfinder
 {
@@ -86,7 +79,18 @@ namespace mdfinder
                     Dispatcher.Invoke(() => txtProgressLabel.Content = file.FullName);
                 }
             };
-            this.Scanner.ReportProgress += (sender, args) => Dispatcher.Invoke(() => { if(args.Processed > 0) { this.progressBar.Value = args.Percentage * 100; } });
+            this.Scanner.ReportProgress += (sender, args) => Dispatcher.Invoke(() =>
+            {
+                if(args.Processed > 0)
+                {
+                    this.progressBar.Value = args.Percentage * 100;
+                    this.taskBarInfo.ProgressValue = args.Percentage;
+                }
+                else
+                {
+                    this.taskBarInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
+                }
+            });
 
             InitializeComponent();
         }
@@ -149,6 +153,84 @@ namespace mdfinder
             this.stackNoPreview.Visibility = Visibility.Visible;
         }
 
+        private void ProcessDuplicateFileGroups(string tag, bool archive, params DuplicateFileGroup[] duplicateFileGroups)
+        {
+            new Thread(() =>
+            {
+                var actionableFiles = Enumerable.Empty<FileRecord>();
+                var archiveName = string.Format("archive-{0}.zip", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+
+                this.Dispatcher.Invoke(() => this.IsEnabled = false);
+
+                if(duplicateFileGroups.Any())
+                {
+                    foreach(var duplicateFileGroup in duplicateFileGroups)
+                    {
+                        if(duplicateFileGroup != null)
+                        {
+                            if(tag == "largest")
+                            {
+                                actionableFiles = duplicateFileGroup.FileRecords.OrderByDescending(fr => fr.Size).Skip(1);
+                            }
+                            else if(tag == "smallest")
+                            {
+                                actionableFiles = duplicateFileGroup.FileRecords.OrderBy(fr => fr.Size).Skip(1);
+                            }
+                            else
+                            {
+                                actionableFiles = duplicateFileGroup.FileRecords.Where(fr => !fr.Keep);
+                            }
+
+                            ZipArchive zipFile = null;
+
+                            if(archive)
+                            {
+                                if(duplicateFileGroups.Count() == 1)
+                                {
+                                    archiveName = string.Format("{0}.zip", duplicateFileGroup.Hash);
+                                }
+
+                                zipFile = ZipFile.Open(System.IO.Path.Combine(Properties.Settings.Default.ArchiveFolder, archiveName), ZipArchiveMode.Update);
+                            }
+
+                            if(archive && zipFile != null)
+                            {
+                                //Zip everything up.
+                                foreach(var file in actionableFiles)
+                                {
+                                    zipFile.CreateEntryFromFile(file.Path.LocalPath, System.IO.Path.GetFileName(file.Path.LocalPath));
+                                }
+                                zipFile.Dispose();
+                            }
+
+                            // Make sure the garbage collector has enough time to clear up all
+                            // references to the files.
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
+
+                            foreach(var file in actionableFiles)
+                            {
+                                //Do the deletion
+                                try
+                                {
+                                    File.Delete(file.Path.LocalPath);
+                                    this.Database.RemoveFileRecord(file.Id);
+                                }
+                                catch(Exception ex)
+                                {
+                                    var r = System.Windows.MessageBox.Show(ex.Message, string.Format("Error deleting {0}", file.Path));
+                                }
+                            }
+
+                            SetDuplicateFileCollection(GetDuplicateFiles());
+                        }
+                    }
+                }
+
+                this.Dispatcher.Invoke(() => this.IsEnabled = true);
+            }).Start();
+        }
+
         /// <summary> Event handler. Called by btnFilePicker for click events. </summary>
         /// <param name="sender"> Source of the event. </param>
         /// <param name="e">      Routed event information. </param>
@@ -176,6 +258,8 @@ namespace mdfinder
                     this.Scanner.Scan(location);
                     this.Dispatcher.Invoke(() => txtProgressLabel.Content = string.Empty);
                     this.Dispatcher.Invoke(() => progressBar.Value = 0);
+                    this.Dispatcher.Invoke(() => taskBarInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal);
+                    this.Dispatcher.Invoke(() => taskBarInfo.ProgressValue = 0);
                     this.Dispatcher.Invoke(() => SetDuplicateFileCollection(GetDuplicateFiles()));
                 }).Start();
             }
@@ -327,112 +411,31 @@ namespace mdfinder
         {
             var tag = (sender as System.Windows.Controls.Button).Tag.ToString();
             var duplicateFileGroup = this.listBoxDupes.SelectedItem as DuplicateFileGroup;
-            var actionableFiles = Enumerable.Empty<FileRecord>();
             var archive = this.checkboxArchiveRemainingFiles.IsChecked ?? false;
+
+            this.ScanResults.SelectedDuplicateFileGroup = null;
 
             ResetMediaPreview();
 
-            new Thread(() =>
-            {
-                if(duplicateFileGroup != null)
-                {
-                    if(tag == "largest")
-                    {
-                        actionableFiles = duplicateFileGroup.FileRecords.OrderByDescending(fr => fr.Size).Skip(1);
-                    }
-                    else if(tag == "smallest")
-                    {
-                        actionableFiles = duplicateFileGroup.FileRecords.OrderBy(fr => fr.Size).Skip(1);
-                    }
-                    else
-                    {
-                        actionableFiles = duplicateFileGroup.FileRecords.Where(fr => !fr.Keep);
-                    }
-
-                    ZipArchive zipFile = null;
-
-                    if(archive)
-                    {
-                        zipFile = ZipFile.Open(System.IO.Path.Combine(Properties.Settings.Default.ArchiveFolder, duplicateFileGroup.Hash + ".zip"), ZipArchiveMode.Update);
-                    }
-
-                    if(archive && zipFile != null)
-                    {
-                        //Zip everything up.
-                        foreach(var file in actionableFiles)
-                        {
-                            zipFile.CreateEntryFromFile(file.Path.LocalPath, System.IO.Path.GetFileName(file.Path.LocalPath));
-                        }
-                        zipFile.Dispose();
-                    }
-
-                    foreach(var file in actionableFiles)
-                    {
-                        //Do the deletion
-                        File.Delete(file.Path.LocalPath);
-
-                        this.Database.RemoveFileRecord(file.Id);
-                    }
-
-                    SetDuplicateFileCollection(GetDuplicateFiles());
-                }
-            }).Start();
+            ProcessDuplicateFileGroups(tag, archive, duplicateFileGroup);
         }
 
         private void PerformDuplicateActionAll_Click(object sender, RoutedEventArgs e)
         {
             var tag = (sender as System.Windows.Controls.Button).Tag.ToString();
             var duplicateFileGroups = new List<DuplicateFileGroup>();
-            var actionableFiles = new List<FileRecord>();
+            var archive = this.checkboxArchiveRemainingFiles.IsChecked ?? false;
 
             foreach(var item in this.listBoxDupes.Items)
             {
                 duplicateFileGroups.Add(item as DuplicateFileGroup);
             }
 
+            this.ScanResults.SelectedDuplicateFileGroup = null;
+
             ResetMediaPreview();
 
-            this.IsEnabled = false;
-
-            new Thread(() =>
-            {
-                foreach(var duplicateFileGroup in duplicateFileGroups)
-                {
-                    if(tag == "largest")
-                    {
-                        actionableFiles.AddRange(duplicateFileGroup.FileRecords.Where(fr => !fr.Keep).OrderByDescending(fr => fr.Size).Skip(1));
-                    }
-                    else if(tag == "smallest")
-                    {
-                        actionableFiles.AddRange(duplicateFileGroup.FileRecords.Where(fr => !fr.Keep).OrderBy(fr => fr.Size).Skip(1));
-                    }
-                }
-
-                var zipFile = ZipFile.Open(System.IO.Path.Combine(Properties.Settings.Default.ArchiveFolder, "archive.zip"), ZipArchiveMode.Update);
-
-                //Zip all the actionable files at once.
-                if(zipFile != null)
-                {
-                    foreach(var file in actionableFiles)
-                    {
-                        zipFile.CreateEntryFromFile(file.Path.LocalPath, System.IO.Path.GetFileName(file.Path.LocalPath));
-                    }
-
-                    zipFile.Dispose();
-
-                    foreach(var file in actionableFiles)
-                    {
-                        //Do the deletions
-                        File.Delete(file.Path.LocalPath);
-
-                        this.Database.RemoveFileRecord(file.Id);
-                    }
-                }
-
-                SetDuplicateFileCollection(GetDuplicateFiles());
-
-                Dispatcher.Invoke(() => this.IsEnabled = true);
-            }).Start();
+            ProcessDuplicateFileGroups(tag, archive, duplicateFileGroups.ToArray());
         }
 
         /// <summary>

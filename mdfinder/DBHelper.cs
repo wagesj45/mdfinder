@@ -1,11 +1,7 @@
 ﻿using LiteDB;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mdfinder
 {
@@ -35,6 +31,16 @@ namespace mdfinder
             }
         }
 
+        /// <summary> Gets the database statistics string. </summary>
+        /// <value> The database statistics. </value>
+        public string DbStatistics
+        {
+            get
+            {
+                return string.Format("{0} Files In Database.", this.FileRecordCollection.Count());
+            }
+        }
+
         #endregion Properties
 
         #region Constructors
@@ -42,7 +48,7 @@ namespace mdfinder
         /// <summary> Default constructor. </summary>
         public DBHelper()
         {
-            this.Database = new LiteDatabase(DEFAULT_DB_FILE_NAME);
+            this.Database = new LiteDatabase(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), DEFAULT_DB_FILE_NAME));
         }
 
         /// <summary> Constructor. </summary>
@@ -65,6 +71,8 @@ namespace mdfinder
         {
             var fileRecord = new FileRecord(path, size, hash, hashProvider);
             this.FileRecordCollection.Upsert(fileRecord);
+
+            this.OnPropertyChanged("DbStatistics");
         }
 
         /// <summary> Removes the file record described by its path. </summary>
@@ -72,6 +80,8 @@ namespace mdfinder
         public void RemoveFileRecord(string id)
         {
             this.FileRecordCollection.Delete(fr => fr.Id == id);
+
+            this.OnPropertyChanged("DbStatistics");
         }
 
         /// <summary> Gets the file records in this collection. </summary>
@@ -97,6 +107,8 @@ namespace mdfinder
         public void Clear()
         {
             this.FileRecordCollection.Delete(Query.All());
+
+            this.OnPropertyChanged("DbStatistics");
         }
 
         #endregion Methods

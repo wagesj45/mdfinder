@@ -133,6 +133,15 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keep the largest item from each duplicate file group.
+        /// </summary>
+        public static string ActionLargestTooltip {
+            get {
+                return ResourceManager.GetString("ActionLargestTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KeepSelected.
         /// </summary>
         public static string ActionSelectedLabel {
@@ -142,11 +151,29 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keep the selected items from each duplicate file group.
+        /// </summary>
+        public static string ActionSelectedTooltip {
+            get {
+                return ResourceManager.GetString("ActionSelectedTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keep Smallest.
         /// </summary>
         public static string ActionSmallestLabel {
             get {
                 return ResourceManager.GetString("ActionSmallestLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep the smallest item from each duplicate file group.
+        /// </summary>
+        public static string ActionSmallestTooltip {
+            get {
+                return ResourceManager.GetString("ActionSmallestTooltip", resourceCulture);
             }
         }
         
@@ -201,6 +228,15 @@ namespace mdfinder.Localization {
         public static string ClearLabel {
             get {
                 return ResourceManager.GetString("ClearLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear the file database completely.
+        /// </summary>
+        public static string ClearTooltip {
+            get {
+                return ResourceManager.GetString("ClearTooltip", resourceCulture);
             }
         }
         
@@ -385,6 +421,15 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mark this set of files as unique.
+        /// </summary>
+        public static string NotDuplicateTooltip {
+            get {
+                return ResourceManager.GetString("NotDuplicateTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string OKLabel {
@@ -493,7 +538,7 @@ namespace mdfinder.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Scan Location.
+        ///   Looks up a localized string similar to Scanning Actions.
         /// </summary>
         public static string ScanningLabel {
             get {

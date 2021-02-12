@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="MDFinder" Language="1033" Version="0.9.0.0" Manufacturer="Jordan Wages" UpgradeCode="bed4df95-335c-4e57-be16-4fb662f39921">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="ProductFeature" Title="mdfinder.installer" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="mdfinder" />
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+      <Component Id="mdfinder" Guid="6D7CD382-5E6D-44A8-953D-AF135FD2865E">
+        <File Source="$(var.mdfinder.TargetDir)" Id="csmic.dll" />
+        <File Source="$(var.mdfinder.TargetDir)" Id="mdfinder.exe.config" />
+        <File Source="$(var.mdfinder.TargetDir)" Id="Gu.Wpf.Media.dll" />
+        <File Source="$(var.mdfinder.TargetDir)" Id="LiteDB.dll" />
+        <File Source="$(var.mdfinder.TargetDir)" Id="Octokit.dll" />
+        <File Source="$(var.mdfinder.TargetDir)" Id="mdfinder.hashprovider.dll" />
+        <File Source="$(var.mdfinder.TargetPath)" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

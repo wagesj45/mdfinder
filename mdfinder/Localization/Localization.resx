@@ -244,7 +244,7 @@
     <value>Location to Scan</value>
   </data>
   <data name="ScanningLabel" xml:space="preserve">
-    <value>Scan Location</value>
+    <value>Scanning Actions</value>
   </data>
   <data name="ScanTooltip" xml:space="preserve">
     <value>Scan the selected path</value>
@@ -284,5 +284,20 @@
   </data>
   <data name="NotDupliateLabel" xml:space="preserve">
     <value>Not A Duplicate</value>
+  </data>
+  <data name="ActionLargestTooltip" xml:space="preserve">
+    <value>Keep the largest item from each duplicate file group</value>
+  </data>
+  <data name="ActionSelectedTooltip" xml:space="preserve">
+    <value>Keep the selected items from each duplicate file group</value>
+  </data>
+  <data name="ActionSmallestTooltip" xml:space="preserve">
+    <value>Keep the smallest item from each duplicate file group</value>
+  </data>
+  <data name="ClearTooltip" xml:space="preserve">
+    <value>Clear the file database completely</value>
+  </data>
+  <data name="NotDuplicateTooltip" xml:space="preserve">
+    <value>Mark this set of files as unique</value>
   </data>
 </root>
